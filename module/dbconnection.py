@@ -32,7 +32,7 @@ def fetch_student_details_by_id(student_id):
     if len(result) != 0:
         myresult = result[0]
         details = module.studentdetails.StudentDetails(myresult[0], myresult[1], myresult[2], myresult[3], myresult[4],
-                                                       myresult[5], myresult[6])
+                                                       myresult[5], myresult[6], myresult[7])
         return details
     else:
         return None
@@ -69,18 +69,18 @@ def fetch_all_students():
         for myresult in result:
             list.append(
                 module.studentdetails.StudentDetails(myresult[0], myresult[1], myresult[2], myresult[3], myresult[4],
-                                                     myresult[5], myresult[6]))
+                                                     myresult[5], myresult[6], myresult[7]))
         return list
     else:
         return None
 
 
-def enter_marks(student_id,exam, mark_details):
+def enter_marks(student_id, exam, mark_details):
     mycurser = mydb.cursor()
     sql = "INSERT INTO studentmgnt.student_marks ( student_id, exam_type, math, science, social, language) VALUES " \
           "(%s, %s, %s, %s, %s, %s) "
-    val = (student_id,exam,mark_details.math,mark_details.science,mark_details.social,mark_details.language)
-    mycurser.execute(sql,val)
+    val = (student_id, exam, mark_details.math, mark_details.science, mark_details.social, mark_details.language)
+    mycurser.execute(sql, val)
     mydb.commit()
     return None
 
@@ -103,9 +103,38 @@ def filter_failed_students(subject):
         for myresult in result:
             sub = module.subjects.Subject(myresult[3], myresult[4], myresult[5], myresult[6])
             student = fetch_student_details_by_id(myresult[1])
-            if student is None :
+            if student is None:
                 continue
-            list.append(module.markdetails.MarkDetails(student,sub,myresult[2]))
+            list.append(module.markdetails.MarkDetails(student, sub, myresult[2]))
+
+        return list
+    else:
+        return None
+
+
+def update_fee_paid(id, paid):
+    mycurser = mydb.cursor()
+    sql = "UPDATE studentmgnt.student_details SET fee_paid = %s WHERE student_id = %s "
+    val = (paid, id)
+    mycurser.execute(sql, val)
+    mydb.commit()
+    return None
+
+
+def fetch_marks_by_student_id(id):
+    mycursor = mydb.cursor()
+    sql = "SELECT * FROM studentmgnt.student_marks where student_id = %s"
+    val = (id,)
+    mycursor.execute(sql,val)
+    result = mycursor.fetchall()
+    if len(result) != 0:
+        list = []
+        for myresult in result:
+            sub = module.subjects.Subject(myresult[3], myresult[4], myresult[5], myresult[6])
+            student = fetch_student_details_by_id(myresult[1])
+            if student is None:
+                continue
+            list.append(module.markdetails.MarkDetails(student, sub, myresult[2]))
 
         return list
     else:

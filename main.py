@@ -3,8 +3,10 @@ import module.subjects
 import module.dbconnection
 from tabulate import tabulate
 
-print("Hi... Please enter module id from below \n 1. Admin \n 2.Teacher")
-module_id = input("Type Module id and press Enter : ")
+from module import project2
+
+print("Hi... Please Enter Project Number from below \n 1. Project 1 \n 2. Project 2")
+project = input("Type Module id and press Enter : ")
 
 
 def add_student():
@@ -16,7 +18,7 @@ def add_student():
     class_name = input("Class Name : ")
     section = input("Section : ")
     student_details = module.studentdetails.StudentDetails(id, name, aadhar_card_number, parents_name, ph_number,
-                                                           class_name, section)
+                                                           class_name, section, None)
     student_id = str(module.dbconnection.add_student(student_details))
     print("Student Details Added Successfully with Student Id : " + student_id)
 
@@ -36,8 +38,9 @@ def print_table_format(list):
             temp.append(x.class_name)
             temp.append(x.section)
             data.append(temp)
-    print(tabulate(data, headers=["Student Id", "Student Name", "Aadhar Card Number", "Parents Name", "Phone Number",
-                                  "Class Name", "Section"]))
+        print(
+            tabulate(data, headers=["Student Id", "Student Name", "Aadhar Card Number", "Parents Name", "Phone Number",
+                                    "Class Name", "Section"]))
 
 
 def view_student():
@@ -143,31 +146,40 @@ def filter_failed_students():
     print(tabulate(data, headers=["Student Id", "Student Name", "Exam Type", "Math", "Science",
                                   "Social", "Language"]))
 
-if module_id == "1":
-    print("You logged in as Admin User. Please select any one of the below options ")
-    print("1. Add student details \n2. View student details \n3. Update student details \n4. Delete student details")
-    option = input("Type Operation Id and press Enter : ")
-    if option == "1":
-        add_student()
-    elif option == "2":
-        view_student()
-    elif option == "3":
-        update_student()
-    elif option == "4":
-        delete_student()
-    else:
-        print("Invalid Option. Please try again later... Thank You !!!")
+
+if project == "1":
+    print("Please enter module id from below \n 1. Admin \n 2.Teacher")
+    module_id = input("Type Module id and press Enter : ")
+    if module_id == "1":
+        print("You logged in as Admin User. Please select any one of the below options ")
+        print(
+            "1. Add student details \n2. View student details \n3. Update student details \n4. Delete student details")
+        option = input("Type Operation Id and press Enter : ")
+        if option == "1":
+            add_student()
+        elif option == "2":
+            view_student()
+        elif option == "3":
+            update_student()
+        elif option == "4":
+            delete_student()
+        else:
+            print("Invalid Option. Please try again later... Thank You !!!")
 
 
-elif module_id == "2":
-    print("You logged in as Teacher User. Please select any one of the below options ")
-    print("1. Enter Marks \n2. Filter Failed Students")
-    option = input("Type Operation Id and press Enter : ")
-    if option == "1":
-        enter_marks()
-    elif option == "2":
-        filter_failed_students()
+    elif module_id == "2":
+        print("You logged in as Teacher User. Please select any one of the below options ")
+        print("1. Enter Marks \n2. Filter Failed Students")
+        option = input("Type Operation Id and press Enter : ")
+        if option == "1":
+            enter_marks()
+        elif option == "2":
+            filter_failed_students()
+        else:
+            print("Invalid Option. Please try again later... Thank You !!!")
     else:
         print("Invalid Option. Please try again later... Thank You !!!")
+elif project == "2":
+    project2.project2()
 else:
     print("Invalid Option. Please try again later... Thank You !!!")
